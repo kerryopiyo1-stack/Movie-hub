@@ -21,8 +21,15 @@ async function getMovies (url) {
 //function for displaying movies
 function displayMovies(movies) {
     moviesGrid.innerHTML = "";
-    movies.forEach(movie => {
-        
-        
+    movies.forEach(movie => {  
+ 
     });
 }
+
+//looping through movies 
+const image = poster_path ? IMAGE_BASE_URL + poster_path : 'https://via.placeholder.com/300x450';
+
+//creating a moviecard element
+const movieCard = document.createElement("div")
+movieCard.className = "bg-green-800 rounded-lg shadow-lg hover:scale-105 transform transition duration-300";
+
