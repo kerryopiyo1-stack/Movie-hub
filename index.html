@@ -13,7 +13,18 @@
         <h1 class="text-2xl font-bold text-red-500">Movie Hub</h1>
         <input class="bg-gray-700 px-3 py-1 rounded" placeholder="Search ..." id="search-input">
     </header>
-   
+    <!--movie grid layout-->
+    <div id="movies-container" class="grid grid-cols-3 md:grid-cols-4 gap-4 p-4 ">
+        <!-- Movie cards will be displayed here -->
+         <div class="bg-gray-800 rounded-lg shadow-lg hover:scale-100 transform transition duration-300">
+            <img src="https://via.placeholder.com/300*400" alt="Movie Poster" class="w-full h-64 object-cover">
+                   </div>
+                   <div class="p-3">
+                    <h2 class="text-lg font-semibold">Movie title</h2>
+                    <p class="text-gray-400">rating 8.5</p>
+                   </div>
+        
+    </div>
 
 
     <script src="script.js"></script>
