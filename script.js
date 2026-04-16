@@ -17,3 +17,12 @@ async function getMovies (url) {
         console.error("Error fetching movies:", error);
     }
 }
+
+//function for displaying movies
+function displayMovies(movies) {
+    moviesGrid.innerHTML = "";
+    movies.forEach(movie => {
+        
+        
+    });
+}
