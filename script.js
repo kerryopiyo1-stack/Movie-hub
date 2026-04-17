@@ -27,14 +27,18 @@ function displayMovies(movies) {
         //looping through movies 
         const image = poster_path ? IMAGE_BASE_URL + poster_path : 'https://via.placeholder.com/300x450';
 
-        //creating a moviecard element
+        //creating a moviecard element/ creates another div
         const movieCard = document.createElement("div");
         movieCard.className = "bg-green-800 rounded-lg shadow-lg hover:scale-105 transform transition duration-300";
+        
+        //inserting HTML inside card
         movieCard.innerHTML = `
 <div class="relative group">
     <img src="${image}" alt="${title}" class="w-full h-64 object-cover rounded-t-lg"/>
     <div class="absolute inset-0 bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-center items-center text-center p-4 rounded-b-lg">
-       <button class="bg-red-500 px-4 py-2 rounded">View</button>
+      
+    <!--trailer button -->
+    <button class="bg-red-500 px-4 py-2 rounded">View</button>
     </div>
     <div class="p-4">
         <h2 class="text-lg font-bold mb-2">${title}</h2>
@@ -48,19 +52,35 @@ function displayMovies(movies) {
     });
 }
 //loading movies  automatically when the page loads
+getMovies(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
 
 
-//
+//searching for movies
+searchInput.addEventListener("keyup", (e) => {
+    const searchTerm = e.target.value.trim();
+    if  (searchTerm) {
+        getMovies(`${BASE_URL}/search/movie?api_key=${API_KEY}&query=${searchTerm}`);
+    }
+}
+);
+ //fetching Trailer
+ async function getTrailer(movieId) {
+    try {
+        const response = await fetch(`${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`);//api request fetches  trailer clips
 
+        const data = await response.json();
 
-
-
-
-
-
-    
-
-
-
+        const trailer = data.results.find(video => video.type === "Trailer" && video.site === "YouTube");
+        
+        if (trailer) {
+            showTrailer(trailer.key)//if trailer found, show trailer;
+        }else {
+            alert("Trailer not available");//if there is no trailer, show alert
+        }
+    } catch (error) {
+        console.error("Error fetching trailer:", error);
+        
+    }
+}
 
 
