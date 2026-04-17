@@ -1,5 +1,9 @@
 //API_KEY
-const API_KEY = "";
+// Use the variable provided by Vite's environment loader
+const API_KEY = import.meta.env.VITE_API_KEY;
+
+console.log("API Key:", API_KEY); // Log
+
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -27,7 +31,7 @@ function showMovies(movies) {
         //looping through movies 
         const image = poster_path ? IMAGE_BASE_URL + poster_path : 'https://via.placeholder.com/300x450';
 
-        //creating a moviecard element/ creates another div
+        //creating a movieCard element/ creates another div
         const movieCard = document.createElement("div");
         movieCard.className = "bg-green-800 rounded-lg shadow-lg hover:scale-105 transform transition duration-300";
         
@@ -56,8 +60,9 @@ function showMovies(movies) {
 //fetching Trailer
  async function getTrailer(movieId) {
     try {
-        const response = await fetch(`${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`);//api request fetches  trailer clips
-
+       const response = await fetch(
+  `${BASE_URL}/movie/${encodeURIComponent(movieId)}/videos?api_key=${encodeURIComponent(API_KEY)}`
+);
         const data = await response.json();
 
         const trailer = data.results.find(video => video.type === "Trailer" && video.site === "YouTube");
@@ -75,11 +80,11 @@ function showMovies(movies) {
  
 
 //showing trailer(selects the video container and adds an iframe to play the trailer)
-function showTrailer(videokey) {
+function showTrailer(videoKey) {
     const videoContainer = document.getElementById("video-container");
     videoContainer.innerHTML = `
     <div class = "relative">
-    <iframe width="100%" height="400" src="https://www.youtube.com/embed/${videokey}" 
+    <iframe width="100%" height="400" src="https://www.youtube.com/embed/${videoKey}" 
     frameborder="0"
      allowfullscreen></iframe>
     
@@ -89,7 +94,7 @@ function showTrailer(videokey) {
     `;
 }
 
-// Close trailer removes video completly
+// Close trailer removes video completely
 function closeTrailer() {
   document.getElementById("video-container").innerHTML = "";
 }
@@ -109,3 +114,7 @@ searchInput.addEventListener("keyup", (e) => {     //listens when user types in 
     });
 
 
+window.getMovies = getMovies;
+window.getTrailer = getTrailer;
+window.showTrailer = showTrailer;
+window.closeTrailer = closeTrailer;
