@@ -1,5 +1,5 @@
 //API_KEY
-const API_KEY = "8bea28b7fc513253b2e5d30bec9123c9";
+const API_KEY = "";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
@@ -42,7 +42,7 @@ function showMovies(movies) {
     </button>
     </div>
     </div>
-    <div class="p-4">
+    <div class="p-4">     //movie title and rating
         <h2 class="text-lg font-bold mb-2">${title}</h2>
         <p class="text-yellow-400 mb-2">${vote_average}</p>
 </div>
@@ -99,9 +99,9 @@ getMovies(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
 
 
 //searching for movies
-searchInput.addEventListener("keyup", (e) => {
+searchInput.addEventListener("keyup", (e) => {     //listens when user types in the search input and triggers a function that fetches movies based on the search term
     const searchTerm = e.target.value.trim();
-   if (searchTerm) {
+   if (searchTerm) {          //if user types something in the search input, it will fetch movies based on the search term, otherwise it will show popular movies
     getMovies(`${BASE_URL}/search/movie?api_key=${API_KEY}&query=${searchTerm}`);
 } else {
     getMovies(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
