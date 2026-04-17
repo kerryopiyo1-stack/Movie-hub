@@ -3,7 +3,7 @@ const API_KEY = "8bea28b7fc513253b2e5d30bec9123c9";
 const BASE_URL = "https://api.themoviedb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
-//selecting HTML elements DOM selection)
+//selecting HTML elements DOM selection
 const  moviesGrid = document.getElementById("movies-container");
 const searchInput = document.getElementById("search-input");
 
@@ -12,17 +12,17 @@ async function getMovies (url) {
     try {
         const response = await fetch(url);
         const data = await response.json();
-        displayMovies(data.results);
+        showMovies(data.results);
     } catch (error) {
         console.error("Error fetching movies:", error);
     }
 }
 
 //function for displaying movies
-function displayMovies(movies) {
+function showMovies(movies) {
     moviesGrid.innerHTML = "";
     movies.forEach(movie => {  
-        const { poster_path, title, vote_average } = movie;
+        const { id, poster_path, title, vote_average } = movie;
         
         //looping through movies 
         const image = poster_path ? IMAGE_BASE_URL + poster_path : 'https://via.placeholder.com/300x450';
@@ -34,16 +34,17 @@ function displayMovies(movies) {
         //inserting HTML inside card
         movieCard.innerHTML = `
 <div class="relative group">
-    <img src="${image}" alt="${title}" class="w-full h-64 object-cover rounded-t-lg"/>
+    <img src="${image}" class="w-full h-64 object-cover rounded-t-lg"/>
+
     <div class="absolute inset-0 bg-black bg-opacity-75 opacity-0 group-hover:opacity-100 transition duration-300 flex flex-col justify-center items-center text-center p-4 rounded-b-lg">
-      
-    <!--trailer button -->
-    <button class="bg-red-500 px-4 py-2 rounded">View</button>
+    <button onclick="getTrailer(${id})" class="bg-red-500 px-4 py-2 rounded">
+    watch trailer
+    </button>
+    </div>
     </div>
     <div class="p-4">
         <h2 class="text-lg font-bold mb-2">${title}</h2>
         <p class="text-yellow-400 mb-2">${vote_average}</p>
-    </div>
 </div>
         `;
         
@@ -51,19 +52,8 @@ function displayMovies(movies) {
         moviesGrid.appendChild(movieCard);
     });
 }
-//loading movies  automatically when the page loads
-getMovies(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
 
-
-//searching for movies
-searchInput.addEventListener("keyup", (e) => {
-    const searchTerm = e.target.value.trim();
-    if  (searchTerm) {
-        getMovies(`${BASE_URL}/search/movie?api_key=${API_KEY}&query=${searchTerm}`);
-    }
-}
-);
- //fetching Trailer
+//fetching Trailer
  async function getTrailer(movieId) {
     try {
         const response = await fetch(`${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`);//api request fetches  trailer clips
@@ -73,8 +63,8 @@ searchInput.addEventListener("keyup", (e) => {
         const trailer = data.results.find(video => video.type === "Trailer" && video.site === "YouTube");
         
         if (trailer) {
-            showTrailer(trailer.key)//if trailer found, show trailer;
-        }else {
+            showTrailer(trailer.key); //if trailer found, show trailer
+        } else {
             alert("Trailer not available");//if there is no trailer, show alert
         }
     } catch (error) {
@@ -82,5 +72,40 @@ searchInput.addEventListener("keyup", (e) => {
         
     }
 }
+ 
+
+//showing trailer(selects the video container and adds an iframe to play the trailer)
+function showTrailer(videokey) {
+    const videoContainer = document.getElementById("video-container");
+    videoContainer.innerHTML = `
+    <div class = "relative">
+    <iframe width="100%" height="400" src="https://www.youtube.com/embed/${videokey}" 
+    frameborder="0"
+     allowfullscreen></iframe>
+    
+    //removes video playing when close button is clicked
+    <button on click="closeTrailer()" class="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded">Close</button> 
+    </div>
+    `;
+}
+
+// Close trailer removes video completly
+function closeTrailer() {
+  document.getElementById("video-container").innerHTML = "";
+}
+
+//loading movies  automatically when the page loads
+getMovies(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
+
+
+//searching for movies
+searchInput.addEventListener("keyup", (e) => {
+    const searchTerm = e.target.value.trim();
+   if (searchTerm) {
+    getMovies(`${BASE_URL}/search/movie?api_key=${API_KEY}&query=${searchTerm}`);
+} else {
+    getMovies(`${BASE_URL}/movie/popular?api_key=${API_KEY}`);
+}        ;
+    });
 
 
